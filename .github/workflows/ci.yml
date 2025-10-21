@@ -10,9 +10,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install --upgrade pip
-      - run: pip install -r requirements.txt
+      - name: Show Python & tree (debug)
+        run: |
+          python -V
+          pip --version
+          ls -la
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip freeze
       - name: Run pytest
         env:
           PYTHONPATH: ${{ github.workspace }}
-        run: pytest -q
+        run: pytest -q -vv
