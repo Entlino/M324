@@ -1,24 +1,21 @@
-import pytest
-import httpx
-from fastapi import status
+from fastapi.testclient import TestClient
 from app.main import app
 
-@pytest.mark.asyncio
-async def test_items_end_to_end_flow():
-    transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
-        # Startliste
-        r = await ac.get("/items")
-        assert r.status_code == status.HTTP_200_OK
-        start_len = len(r.json())
+client = TestClient(app)
 
-        # Neues Item
-        r = await ac.post("/items", json={"text": "Testtodo"})
-        assert r.status_code == status.HTTP_201_CREATED
-        created = r.json()
-        assert "id" in created and created["text"] == "Testtodo"
+def test_items_end_to_end_flow():
+    # Start: Liste holen
+    r = client.get("/items")
+    assert r.status_code == 200
+    start_len = len(r.json())
 
-        # Liste +1
-        r = await ac.get("/items")
-        assert r.status_code == status.HTTP_200_OK
-        assert len(r.json()) == start_len + 1
+    # Neues Item anlegen
+    r = client.post("/items", json={"text": "Testtodo"})
+    assert r.status_code == 201
+    created = r.json()
+    assert "id" in created and created["text"] == "Testtodo"
+
+    # Liste erneut: Länge +1
+    r = client.get("/items")
+    assert r.status_code == 200
+    assert len(r.json()) == start_len + 1
