@@ -1,0 +1,20 @@
+name: simple-deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install fastapi uvicorn
+      - name: Start FastAPI (Demo Deployment)
+        run: |
+          echo "🚀 Starte Deployment..."
+          nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+          sleep 5
+          echo "✅ App läuft jetzt (Demo)"
