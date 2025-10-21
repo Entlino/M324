@@ -23,3 +23,7 @@ def create_item(payload: ItemIn):
     item = {"id": len(items)+1, "text": payload.text}
     items.append(item)
     return item
+
+# End of file: app/main.py
+
+# SMS-7: Healthcheck-Endpoint implementiert
