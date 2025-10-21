@@ -12,7 +12,7 @@ class ItemIn(BaseModel):
     text: str
 
 
-# In-Memory-Liste zum Speichern der Todos
+
 items = [
     {"id": 1, "text": "Milch kaufen"},
     {"id": 2, "text": "E-Mail an Chef"},
